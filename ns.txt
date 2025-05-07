@@ -1,0 +1,150 @@
+exp1
+import getpass
+
+# Store the password in plain text
+stored_password = "mypassword"
+
+def first_task():
+    user_pass = input("Enter Password: ")
+    if user_pass == stored_password:
+        print("Correct Password")
+    else:
+        print("Incorrect Password")
+
+def second_task():
+    password = getpass.getpass("Enter Hidden Password: ")
+    print("Input received: ", '*' * len(password))
+
+def third_task():
+    pass_plain = input("Enter Password: ")
+    print("Password Entered:", pass_plain)
+    if len(pass_plain) < 8:
+        print("Warning: Password should be at least 8 characters!")
+
+def menu():
+    print("\n--- Password Menu ---")
+    print("1. Verify Password")
+    print("2. Hidden Password Input")
+    print("3. Show Entered Password")
+    print("4. Exit")
+
+def main():
+    while True:
+        menu()
+        choice = input("Choose a task (1-4): ")
+        if choice == '1':
+            first_task()
+        elif choice == '2':
+            second_task()
+        elif choice == '3':
+            third_task()
+        elif choice == '4':
+            print("Goodbye!")
+            break
+        else:
+            print("Please enter a valid option (1-4).")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+exp3
+def caesar_encrypt(text, key):
+    result = ''
+    for char in text:
+        if char.islower():
+            result += chr((ord(char) - ord('a') + key) % 26 + ord('a'))
+        elif char.isupper():
+            result += chr((ord(char) - ord('A') + key) % 26 + ord('A'))
+        else:
+            result += char
+    return result
+
+def caesar_decrypt(text, key):
+    return caesar_encrypt(text, -key)
+
+# Directly set the input sentence and key here
+sentence = "NetworkSecurity"
+key = 4  # Caesar shift
+
+print("Original Text:", sentence)
+
+encrypted = caesar_encrypt(sentence, key)
+print("Encrypted Text:", encrypted)
+
+decrypted = caesar_decrypt(encrypted, key)
+print("Decrypted Text:", decrypted)
+
+
+
+
+exp3
+import pandas as pd
+
+def encrypt(text, key):
+    key_len = len(key)
+    rows = (len(text) + key_len - 1) // key_len + 1
+
+    # Create the grid
+    grid = [[' ' for _ in range(key_len)] for _ in range(rows)]
+    grid[0] = list(key)
+
+    # Fill grid with plaintext
+    idx = 0
+    for r in range(1, rows):
+        for c in range(key_len):
+            if idx < len(text):
+                grid[r][c] = text[idx]
+                idx += 1
+
+    print("\nGrid used for encryption:")
+    print(pd.DataFrame(grid))
+
+    # Sort key to determine order of columns
+    sorted_key = sorted(key)
+    ciphertext = ''
+
+    for ch in sorted_key:
+        col = key.index(ch)
+        for r in range(1, rows):
+            ciphertext += grid[r][col]
+
+    return ciphertext
+
+def decrypt(ciphertext, key):
+    key_len = len(key)
+    rows = (len(ciphertext) + key_len - 1) // key_len + 1
+
+    # Create the grid
+    grid = [[' ' for _ in range(key_len)] for _ in range(rows)]
+    grid[0] = list(key)
+
+    sorted_key = sorted(key)
+    idx = 0
+    for ch in sorted_key:
+        col = key.index(ch)
+        for r in range(1, rows):
+            if idx < len(ciphertext):
+                grid[r][col] = ciphertext[idx]
+                idx += 1
+
+    plaintext = ''
+    for r in range(1, rows):
+        for c in range(key_len):
+            if grid[r][c] != ' ':
+                plaintext += grid[r][c]
+
+    return plaintext
+
+# Example usage
+key = "MEGADUCK"
+text = "Pleasetransferonemilliondollarstomyswissbankaccountsixtwotwofour"
+
+print("Original Plaintext:", text)
+cipher = encrypt(text, key)
+print("Ciphertext:", cipher)
+decrypted = decrypt(cipher, key)
+print("Decrypted Text:", decrypted)
